@@ -1,0 +1,3 @@
+# Static assets directory
+# Place CSS, JS, images, and other static files here.
+# This directory is served at /static by FastAPI.
