@@ -12,6 +12,9 @@ from typing import List
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+BASE_DIR = Path(__file__).resolve().parent
+
+
 class Settings(BaseSettings):
     """
     Application settings loaded from the .env file.
@@ -23,7 +26,7 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(str(BASE_DIR / ".env"), ".env"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -60,10 +63,10 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Model
     # ------------------------------------------------------------------
-    model_dir: str = "models/xlm_roberta_hate_model"
+    model_dir: str = "models/Kannada_Hate_Speech_Model_V3"
     model_name: str = "xlm-roberta-base"
-    max_sequence_length: int = 512
-    prediction_threshold: float = 0.5
+    max_sequence_length: int = 128
+    prediction_threshold: float = 0.53
 
     # ------------------------------------------------------------------
     # Logging
@@ -86,12 +89,14 @@ class Settings(BaseSettings):
     @property
     def model_path(self) -> Path:
         """Absolute path to the model directory."""
-        return Path(self.model_dir).resolve()
+        p = Path(self.model_dir)
+        return p if p.is_absolute() else (BASE_DIR / p).resolve()
 
     @property
     def log_path(self) -> Path:
         """Absolute path to the log directory."""
-        return Path(self.log_dir).resolve()
+        p = Path(self.log_dir)
+        return p if p.is_absolute() else (BASE_DIR / p).resolve()
 
     @property
     def is_production(self) -> bool:

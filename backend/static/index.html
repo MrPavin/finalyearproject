@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hate Speech Detection API</title>
+    
+    <!-- SEO Best Practices -->
+    <meta name="description" content="A powerful and highly accurate model for detecting hate speech and offensive language across multiple languages.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <main class="app-container">
+        <header class="app-header">
+            <h1>ShieldAI</h1>
+            <p class="subtitle">Advanced Hate Speech Detection</p>
+        </header>
+
+        <section class="prediction-section">
+            <form id="prediction-form">
+                <div class="input-wrapper">
+                    <label for="text-input" class="sr-only">Enter text to analyze</label>
+                    <textarea 
+                        id="text-input" 
+                        name="text" 
+                        placeholder="Type or paste text here to analyze for hate speech..."
+                        required
+                        spellcheck="false"
+                    ></textarea>
+                </div>
+
+                <div class="controls-wrapper">
+                    <div class="language-select">
+                        <label for="language">Language</label>
+                        <select id="language" name="language">
+                            <option value="auto">Auto-detect</option>
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="kn">Kannada</option>
+                            <option value="roman_kn">Roman Kannada</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" id="submit-btn" class="submit-btn">
+                        <span class="btn-text">Analyze Text</span>
+                        <div class="spinner hidden" id="loading-spinner"></div>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section id="result-section" class="result-section hidden">
+            <div class="result-card" id="result-card">
+                <div class="result-header">
+                    <h2>Analysis Result</h2>
+                    <span id="detected-language" class="lang-badge"></span>
+                </div>
+                
+                <div class="verdict-container" id="verdict-container">
+                    <!-- Dynamic content will be injected here -->
+                </div>
+
+                <div class="metrics-container">
+                    <div class="metric">
+                        <span class="metric-label">Confidence</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="confidence-fill"></div>
+                        </div>
+                        <span class="metric-value" id="confidence-value">0%</span>
+                    </div>
+                    
+                    <div class="metric-row">
+                        <div class="small-metric">
+                            <span class="label">Processing Time:</span>
+                            <span class="value" id="processing-time">-- ms</span>
+                        </div>
+                        <div class="small-metric">
+                            <span class="label">Request ID:</span>
+                            <span class="value request-id" id="request-id">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SHAP Explainability section -->
+                <div class="shap-container hidden" id="shap-container">
+                    <div class="shap-header">
+                        <span class="shap-title">🔍 SHAP Explainability (XGBoost Feature Impact)</span>
+                        <span class="shap-base" id="shap-base">Base: --</span>
+                    </div>
+                    <div class="shap-summary">
+                        <span class="label">Net Model Impact (SHAP Sum):</span>
+                        <span class="value" id="shap-sum">--</span>
+                    </div>
+                    <div class="shap-features-grid">
+                        <div class="shap-col">
+                            <span class="shap-col-title pos">▲ Pushing Towards Hate</span>
+                            <ul id="shap-pos-list" class="shap-list"></ul>
+                        </div>
+                        <div class="shap-col">
+                            <span class="shap-col-title neg">▼ Pushing Towards Non-Hate</span>
+                            <ul id="shap-neg-list" class="shap-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <div id="error-toast" class="toast hidden">
+            <div class="toast-content">
+                <svg class="error-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span id="error-message">An error occurred.</span>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

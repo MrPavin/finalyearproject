@@ -8,7 +8,7 @@ breaking the public API surface.
 """
 
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -32,11 +32,27 @@ class HateSpeechLabel(str, Enum):
     Classification outcomes — matches the model's trained id2label mapping.
 
         0 → non_hate   (benign text)
-        1 → hate        (hate speech detected)
+        1 → hate       (hate speech detected)
     """
 
     NON_HATE = "non_hate"
     HATE = "hate"
+
+    @classmethod
+    def _missing_(cls, value: object):
+        """
+        Handle flexible case, dash/underscore variations, and numeric IDs.
+        """
+        if isinstance(value, str):
+            normalized = value.strip().lower().replace("-", "_")
+            for member in cls:
+                if member.value == normalized:
+                    return member
+            if normalized in ("not_hate", "normal", "benign", "safe", "label_0", "0"):
+                return cls.NON_HATE
+            if normalized in ("offensive", "label_1", "1"):
+                return cls.HATE
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -139,6 +155,10 @@ class PredictionResult(BaseModel):
     language_detected: Optional[str] = Field(
         default=None,
         description="ISO language code detected by the model (if auto-detect enabled).",
+    )
+    explanation: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="SHAP feature attribution and explainability metrics.",
     )
     processing_time_ms: float = Field(
         ...,

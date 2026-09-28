@@ -40,10 +40,21 @@ MANIFEST
 # ============================================================
 # Model Weights & Large Files (use Git LFS if needed)
 # ============================================================
-models/xlm_roberta_hate_model/*.bin
-models/xlm_roberta_hate_model/*.pt
-models/xlm_roberta_hate_model/*.safetensors
-models/xlm_roberta_hate_model/*.ckpt
+models/*/*.bin
+models/*/*.pt
+models/*/*.safetensors
+models/*/*.ckpt
+models/*/*.model
+models/**/checkpoint-*
+models/**/*.pt
+models/**/*.pth
+models/**/*.safetensors
+models/**/*.bin
+*.safetensors
+*.bin
+*.pt
+*.pth
+checkpoint-*
 
 # ============================================================
 # Logs

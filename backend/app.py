@@ -26,7 +26,7 @@ from typing import AsyncIterator
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from config import get_settings
@@ -107,6 +107,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # ------------------------------------------------------------------
     try:
         await model_service.load()
+        logger.info("LIFESPAN model_service id=%s, is_loaded=%s", id(model_service), model_service.is_loaded)
 
         # Console banner — ASCII-safe for all terminal encodings
         print("\n[OK] XLM-RoBERTa model loaded successfully.")
@@ -258,7 +259,7 @@ def create_app() -> FastAPI:
     # ------------------------------------------------------------------
     # Static files
     # ------------------------------------------------------------------
-    static_dir = Path("static")
+    static_dir = Path(__file__).resolve().parent / "static"
     static_dir.mkdir(exist_ok=True)
     app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
@@ -312,15 +313,8 @@ def create_app() -> FastAPI:
     # Root redirect info
     # ------------------------------------------------------------------
     @app.get("/", include_in_schema=False)
-    async def root() -> JSONResponse:
-        return JSONResponse(
-            content={
-                "message": f"Welcome to {settings.app_name}",
-                "version": settings.app_version,
-                "docs": "/docs",
-                "health": "/health",
-            }
-        )
+    async def root() -> FileResponse:
+        return FileResponse(static_dir / "index.html")
 
     logger.info("Application factory complete — routers registered.")
     return app

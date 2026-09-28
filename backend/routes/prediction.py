@@ -60,10 +60,21 @@ def _build_prediction_result(raw: Dict[str, Any]) -> PredictionResult:
     The scores dict uses plain string keys (e.g. "non_hate", "hate")
     because PredictionResult.scores is Dict[str, float].
     """
+    raw_label = raw["label"]
+    try:
+        label = HateSpeechLabel(raw_label)
+    except (ValueError, KeyError):
+        clean = str(raw_label).strip().lower()
+        if "hate" in clean and "non" not in clean and "not" not in clean:
+            label = HateSpeechLabel.HATE
+        else:
+            label = HateSpeechLabel.NON_HATE
+
     return PredictionResult(
-        label=HateSpeechLabel(raw["label"]),
+        label=label,
         confidence=raw["confidence"],
         scores=raw["scores"],          # already Dict[str, float] from _infer
+        explanation=raw.get("explanation"),
         language_detected=raw.get("language_detected"),
         processing_time_ms=raw["processing_time_ms"],
     )

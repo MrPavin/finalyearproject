@@ -1,0 +1,21 @@
+{
+  "model": "FacebookAI/xlm-roberta-base",
+  "max_length": 192,
+  "batch_size": 8,
+  "gradient_accumulation": 2,
+  "epochs": 5,
+  "learning_rate": 2e-05,
+  "weight_decay": 0.01,
+  "best_epoch": 4,
+  "best_development_f1": 0.7341772151898734,
+  "best_threshold": 0.4400000000000001,
+  "test_accuracy": 0.6963434022257552,
+  "test_precision": 0.6229946524064172,
+  "test_recall": 0.823321554770318,
+  "test_f1": 0.7092846270928462,
+  "test_macro_f1": 0.6957404832635612,
+  "labels": {
+    "0": "NON-HATE",
+    "1": "HATE"
+  }
+}
